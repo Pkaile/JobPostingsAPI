@@ -13,7 +13,6 @@ function App() {
   const [page, setPage] = useState(1);
   
   const {jobs, loading, error, hasNextPage} = useFetchJobs(page, params);
-  console.log(jobs, loading, error, hasNextPage);
   function setParamsHandler(state){
     setParams(state);    
   }
