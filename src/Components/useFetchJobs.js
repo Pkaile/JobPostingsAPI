@@ -52,6 +52,7 @@ export default function useFetchJobs(page, params) {
             },
             method: 'get'
         }).then(res => {
+            res.setHeader("Access-Control-Allow-Origin", "*");
             if (!res.ok) {
                 dispatch({
                     type: 'errors',
@@ -73,12 +74,13 @@ export default function useFetchJobs(page, params) {
         });
         // checking to see if there is a next page 
         fetch(nextPageUrl, {
-            'Access-Control-Allow-Origin':true,
+            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json'
             },
             method: 'get'
         }).then(res => {
+            res.setHeader("Access-Control-Allow-Origin", "*");
             return res.json();
         }).then(data => {
             dispatch({
