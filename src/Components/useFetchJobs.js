@@ -45,7 +45,7 @@ export default function useFetchJobs(page, params) {
             type: 'make-req'
         });
         fetch(url, {
-            mode: "no-cors",
+            'Access-Control-Allow-Origin':true,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -73,7 +73,7 @@ export default function useFetchJobs(page, params) {
         });
         // checking to see if there is a next page 
         fetch(nextPageUrl, {
-            mode: "no-cors",
+            'Access-Control-Allow-Origin':true,
             headers: {
                 'Content-Type': 'application/json'
             },
