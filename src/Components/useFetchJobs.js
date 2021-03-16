@@ -44,57 +44,60 @@ export default function useFetchJobs(page, params) {
         dispatch({
             type: 'make-req'
         });
-        fetch(url, {
-            'Access-Control-Allow-Origin':true,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'get',
-            statusCode: 200
-        }).then(res => {
-            if (!res.ok) {
+        async function getJobs() {
+            await fetch(url, {
+                'Access-Control-Allow-Origin': true,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'get',
+                statusCode: 200
+            }).then(res => {
+                if (!res.ok) {
+                    dispatch({
+                        type: 'errors',
+                        payload: true
+                    });
+                    throw new Error(res.status);
+                }
+                return res.json();
+            }).then(data => {
+                dispatch({
+                    type: 'get-data',
+                    payload: data
+                });
+            }).catch(error => {
                 dispatch({
                     type: 'errors',
                     payload: true
                 });
-                throw new Error(res.status);
-            }
-            return res.json();
-        }).then(data => {
-            dispatch({
-                type: 'get-data',
-                payload: data
             });
-        }).catch(error => {
-            dispatch({
-                type: 'errors',
-                payload: true
+            // checking to see if there is a next page 
+            await fetch(nextPageUrl, {
+                mode: 'cors',
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    'Content-Type': 'application/json'
+                },
+                method: 'get',
+                statusCode: 200
+            }).then(res => {
+                return res.json();
+            }).then(data => {
+                dispatch({
+                    type: 'has-next-page',
+                    payload: data.length !== 0
+                });
+            }).catch(error => {
+                dispatch({
+                    type: 'errors',
+                    payload: true
+                });
             });
-        });
-        // checking to see if there is a next page 
-        fetch(nextPageUrl, {
-            mode: 'cors',
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                'Content-Type': 'application/json'
-            },
-            method: 'get',
-            statusCode: 200
-        }).then(res => {
-            return res.json();
-        }).then(data => {
-            dispatch({
-                type: 'has-next-page',
-                payload: data.length !== 0
-            });
-        }).catch(error => {
-            dispatch({
-                type: 'errors',
-                payload: true
-            });
-        });
+        }
+    getJobs();
     }, [params, page]);
     return state;
 }
