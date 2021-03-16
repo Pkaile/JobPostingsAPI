@@ -47,12 +47,13 @@ export default function useFetchJobs(page, params) {
         fetch(url, {
             'Access-Control-Allow-Origin':true,
             headers: {
+                "Access-Control-Allow-Origin": "*",
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            method: 'get'
+            method: 'get',
+            statusCode: 200
         }).then(res => {
-            res.setHeader("Access-Control-Allow-Origin", "*");
             if (!res.ok) {
                 dispatch({
                     type: 'errors',
@@ -76,11 +77,12 @@ export default function useFetchJobs(page, params) {
         fetch(nextPageUrl, {
             mode: 'cors',
             headers: {
+                "Access-Control-Allow-Origin": "*",
                 'Content-Type': 'application/json'
             },
-            method: 'get'
+            method: 'get',
+            statusCode: 200
         }).then(res => {
-            res.setHeader("Access-Control-Allow-Origin", "*");
             return res.json();
         }).then(data => {
             dispatch({
