@@ -36,7 +36,8 @@ export default function useFetchJobs(page, params) {
         error: false,
         hasNextPage: false
     });
-    const ProductionBaseUrl = 'https://jobs.github.com/positions.json';
+    const allowCors = "https://stark-mesa-12909.herokuapp.com";
+    const ProductionBaseUrl = `${allowCors}/https://jobs.github.com/positions.json`;
     useEffect(() => {
         let url = `${ProductionBaseUrl}?description=${params.description}&location=${params.location}&full_time=${params.full_time}&page=${page}&markdown=true`;
         let nextPageUrl = `${ProductionBaseUrl}?description=${params.description}&location=${params.location}&full_time=${params.full_time}&page=${page + 1}&markdown=true`;
@@ -48,12 +49,9 @@ export default function useFetchJobs(page, params) {
             await fetch(url, {
                 'Access-Control-Allow-Origin': true,
                 headers: {
-                    "Access-Control-Allow-Origin": "*",
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
-                },
-                method: 'get',
-                statusCode: 200
+                }
             }).then(res => {
                 if (!res.ok) {
                     dispatch({
@@ -78,11 +76,8 @@ export default function useFetchJobs(page, params) {
             await fetch(nextPageUrl, {
                 mode: 'cors',
                 headers: {
-                    "Access-Control-Allow-Origin": "*",
                     'Content-Type': 'application/json'
                 },
-                method: 'get',
-                statusCode: 200
             }).then(res => {
                 return res.json();
             }).then(data => {
